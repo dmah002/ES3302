@@ -53,7 +53,11 @@ pgs_M<- ggplot(Meranti, aes(x=gy, y=height)) +
 library("vegan") #diversity index function
 
 CleanTech$richness <- length(unique(CleanTech$sp))
-CleanTech$abundance <- length(CleanTech)
+CleanTech$abundance <- nrow(CleanTech)
+CleanTech$density <- (CleanTech$abundance)*(1/(100*40))
+Meranti$richness <- length(unique(Meranti$sp))
+Meranti$abundance <- nrow(Meranti)
+Meranti$density <- (Meranti$abundance)*(1/(70*30))
 
 CT_div <- data.frame(count(CleanTech, vars = sp))
 div <- diversity(CT_div[-1], index="shannon")
@@ -71,6 +75,9 @@ ggplot(data=div, aes(x=Forest, y=ShannonDI)) +
   geom_text(aes(label=ShannonDI), vjust=1.6, color="white", size=3.5)+
   theme_minimal()
 
+forestTraits<- rbind(c("CleanTech",length(unique(CleanTech$sp)),nrow(CleanTech),(nrow(CleanTech))*(1/(100*40)),div[1,2]),
+                     c("Meranti",length(unique(Meranti$sp)),nrow(Meranti),(nrow(Meranti))*(1/(70*30)), div[2,2]))
+colnames(forestTraits) <- c("Forest","Richness","Abundance","Density", "Shannon-Wiener Diversity Index")
 
 plot(pbp_M)
 
